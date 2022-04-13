@@ -65,7 +65,7 @@ const getBooks = (request, h) => {
     const response = h.response({
       status: 'success',
       data: {
-        book: bookshelf.map((books) => ({
+        books: bookshelf.map((books) => ({
           id : books.id,
           name: books.name,
           publisher: books.publisher,
@@ -81,7 +81,7 @@ const getBooks = (request, h) => {
     const response = h.response({
       status: 'success',
       data: {
-        book: bookshelf.map((books) => ({
+        books: bookshelf.map((books) => ({
           id : books.id,
           name: books.name,
           publisher: books.publisher
@@ -97,7 +97,7 @@ const getBooks = (request, h) => {
     const response = h.response({
       status: 'success',
       data: {
-        book: bookshelf.map((books) => ({
+        books: bookshelf.map((books) => ({
           id : books.id,
           name: books.name,
           publisher: books.publisher
@@ -111,7 +111,7 @@ const getBooks = (request, h) => {
   const response = h.response({
     status: 'success',
     data: {
-      book: bookshelf.map((books) =>  ({
+      books: bookshelf.map((books) =>  ({
         id : books.id,
         name: books.name,
         publisher: books.publisher
@@ -203,7 +203,6 @@ const updateBooks = (request, h) => {
 
 const deleteBooks = (request, h) => {
     const { bookId } = request.params;
-   
     const index = bookshelf.findIndex((books) => books.id === bookId);
    
     if (index !== -1) {
