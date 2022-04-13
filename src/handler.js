@@ -9,12 +9,6 @@ const addBooks = (request, h) => {
     const updatedAt = insertedAt;
     let finished = false;
    
-    const newBooks = {
-        name, year, author, summary, publisher, pageCount, readPage, reading, id, finished, insertedAt, updatedAt 
-    };
-   
-    bookshelf.push(newBooks);
-
     if (pageCount === readPage) {
       finished = true;}
     
@@ -35,6 +29,11 @@ const addBooks = (request, h) => {
         response.code(400);
         return response;
       }
+
+      const newBooks = {
+        id, name, year, author, summary, publisher, pageCount, readPage, reading, insertedAt, updatedAt, finished 
+    };
+    bookshelf.push(newBooks);
 
     const isSuccess = bookshelf.filter((book) => book.id === id).length > 0;
    
