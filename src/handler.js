@@ -1,4 +1,5 @@
 /* eslint-disable linebreak-style */
+/* eslint-disable no-shadow */
 /* eslint-disable no-trailing-spaces */
 const { nanoid } = require('nanoid');
 const bookshelf = require('./bookshelf');
@@ -17,6 +18,21 @@ const addBooks = (request, h) => {
     finished = true;
   }
     
+  const newBooks = {
+    id, 
+    name, 
+    year, 
+    author, 
+    summary, 
+    publisher, 
+    pageCount, 
+    readPage, 
+    reading, 
+    insertedAt, 
+    updatedAt, 
+    finished, 
+  };
+
   if (!name) {
     const response = h.response({
       status: 'fail',
@@ -35,20 +51,6 @@ const addBooks = (request, h) => {
     return response;
   }
 
-  const newBooks = {
-    id, 
-    name, 
-    year, 
-    author, 
-    summary, 
-    publisher, 
-    pageCount, 
-    readPage, 
-    reading, 
-    insertedAt, 
-    updatedAt, 
-    finished, 
-  };
   bookshelf.push(newBooks);
 
   const isSuccess = bookshelf.filter((book) => book.id === id).length > 0;
@@ -76,11 +78,11 @@ const getBooks = (request, h) => {
   const { name, reading, finished } = request.query;
 
   if (name) {
-    const books = bookshelf.filter((book) => book.name.toLowerCase().includes(name.toLowerCase()));
+    const book = bookshelf.filter((book) => book.name.toLowerCase().includes(name.toLowerCase()));
     const response = h.response({
       status: 'success',
       data: {
-        books: bookshelf.map((book) => ({
+        books: book.map((book) => ({
           id: book.id,
           name: book.name,
           publisher: book.publisher,
@@ -92,11 +94,11 @@ const getBooks = (request, h) => {
   }
 
   if (reading) {
-    const books = bookshelf.filter((book) => Number(book.reading) === Number(reading));
+    const book = bookshelf.filter((book) => Number(book.reading) === Number(reading));
     const response = h.response({
       status: 'success',
       data: {
-        books: bookshelf.map((book) => ({
+        books: book.map((book) => ({
           id: book.id,
           name: book.name,
           publisher: book.publisher,
@@ -108,11 +110,11 @@ const getBooks = (request, h) => {
   }
 
   if (finished) {
-    const books = bookshelf.filter((book) => Number(book.finished) === Number(finished));
+    const book = bookshelf.filter((book) => Number(book.finished) === Number(finished));
     const response = h.response({
       status: 'success',
       data: {
-        books: bookshelf.map((book) => ({
+        books: book.map((book) => ({
           id: book.id,
           name: book.name,
           publisher: book.publisher,
@@ -139,24 +141,24 @@ const getBooks = (request, h) => {
 
 const getBooksID = (request, h) => {
   const { bookId } = request.params;
-  const books = bookshelf.filter((book) => book.id === bookId)[0];
+  const book = bookshelf.filter((book) => book.id === bookId)[0];
    
-  if (books === undefined) {
+  if (book !== undefined) {
     const response = h.response({
-      status: 'fail',
-      message: 'Buku tidak ditemukan',
+      status: 'success',
+      data: {
+        book,
+      },
     });
-    response.code(404);
+    response.code(200);
     return response;
   }
    
   const response = h.response({
-    status: 'success',
-    data: {
-      books,
-    },
+    status: 'fail',
+    message: 'Buku tidak ditemukan',
   });
-  response.code(200);
+  response.code(404);
   return response;
 };
 
@@ -188,6 +190,8 @@ const updateBooks = (request, h) => {
     return response;
   }
 
+  const finished = (pageCount === readPage);
+
   if (index !== -1) {
     bookshelf[index] = {
       ...bookshelf[index],
@@ -197,7 +201,8 @@ const updateBooks = (request, h) => {
       summary, 
       publisher, 
       pageCount, 
-      readPage, 
+      readPage,
+      finished,  
       reading, 
       updatedAt,
     };
